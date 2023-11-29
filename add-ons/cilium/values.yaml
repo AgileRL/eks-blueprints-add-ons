@@ -1,5 +1,11 @@
+# see: https://docs.cilium.io/en/stable/installation/cni-chaining-aws-cni/#chaining-aws-cni
 cilium:
   cni:
     chainingMode: aws-cni
+    exclusize: "false"
+  # as ENI IP addresses can be routed directly in the VPC, we can disable masquerade and tunnel
   enableIPv4Masquerade: false
   tunnel: disabled
+  endpointRoutes:
+    enabled: "true"
+  routingMode: native 
