@@ -24,6 +24,7 @@ cilium:
   k8sServiceHost: F64FBD45EE533BC394F728E57E23061E.gr7.us-east-1.eks.amazonaws.com
   k8sServicePort: 443
   # k8s ingress support
+  l7Proxy: true
   nodePort:
     enabled: true
   ingressController:
