@@ -10,6 +10,13 @@ cilium:
     enabled: true
   routingMode: native 
 
+  # enable hubble
+  hubble:
+    relay:
+      enabled: true
+    ui:
+      enabled: true
+
   # k8s ingress support
   # ingressController:
     # enabled: true
