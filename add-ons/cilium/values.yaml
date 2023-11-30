@@ -21,7 +21,7 @@ cilium:
   nodePort:
     enabled: true
   kubeProxyReplacement: true
-  k8sServiceHost: 172.20.0.1
+  k8sServiceHost: F64FBD45EE533BC394F728E57E23061E.gr7.us-east-1.eks.amazonaws.com
   k8sServicePort: 443
   ingressController:
     enabled: true
