@@ -17,12 +17,15 @@ cilium:
     ui:
       enabled: true
 
-  # k8s ingress support
-  nodePort:
-    enabled: true
+  # kube-proxy replacement
+  # k8sServiceHost and k8sServicePort are needed 
+  # because no kube-proxy provisioning the cluster service
   kubeProxyReplacement: true
   k8sServiceHost: F64FBD45EE533BC394F728E57E23061E.gr7.us-east-1.eks.amazonaws.com
   k8sServicePort: 443
+  # k8s ingress support
+  nodePort:
+    enabled: true
   ingressController:
     enabled: true
-    loadbalancerMode: dedicated
+    loadbalancerMode: shared # dedicated
