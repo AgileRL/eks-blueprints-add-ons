@@ -18,6 +18,11 @@ cilium:
       enabled: true
 
   # k8s ingress support
-  # ingressController:
-    # enabled: true
-    # loadbalancerMode: dedicated
+  nodePort:
+    enabled: true
+  kubeProxyReplacement: true
+  k8sServiceHost: 172.20.0.1
+  k8sServicePort: 443
+  ingressController:
+    enabled: true
+    loadbalancerMode: dedicated
