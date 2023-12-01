@@ -1,3 +1,8 @@
+variable "cluster_name" {
+  description = "The name of the EKS cluster"
+  type = string
+}
+
 variable "gws_oidc_client_id" {
   description = "The OIDC client id for Google Workspace"
   type = string
