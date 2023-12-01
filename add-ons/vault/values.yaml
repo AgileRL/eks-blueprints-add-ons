@@ -76,8 +76,7 @@ vault:
   
           seal "awskms" {
             region = "us-east-1"
-            kms_key_id = "arn:aws:kms:us-east-1:761296822462:key/b95fd79a-aed4-4213-83a9-bbf521f3ae0c"
-            # kms_key_id = "eks/agrl-core-vault"
+            kms_key_id = "alias/eks/agrl-core-vault-unseal"
           }
   
           storage "raft" {
