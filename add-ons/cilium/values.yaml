@@ -21,6 +21,12 @@ cilium:
   encryption:
     enabled: true
     type: wireguard
+  authentication:
+    mutual:
+      spire:
+        enabled: true
+        install:
+          enabled: true
 
 #  # kube-proxy replacement
 #  # k8sServiceHost and k8sServicePort are needed 
