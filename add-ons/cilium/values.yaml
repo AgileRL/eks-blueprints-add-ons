@@ -17,6 +17,11 @@ cilium:
     ui:
       enabled: true
 
+  # needed by Mutual Authentication
+  encryption:
+    enabled: true
+    type: wireguard
+
 #  # kube-proxy replacement
 #  # k8sServiceHost and k8sServicePort are needed 
 #  # because no kube-proxy provisioning the cluster service
