@@ -36,3 +36,6 @@ terraform.rc
 
 # Generated files
 builds
+
+# Do not store credential data
+vault/data/vault.recovery

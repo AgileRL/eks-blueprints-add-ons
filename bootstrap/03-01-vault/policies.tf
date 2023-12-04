@@ -4,8 +4,8 @@ resource "vault_policy" "admin_policy" {
   policy = file("policies/admin.hcl")
 }
 
-
-resource "vault_policy" "kv2_readers_policy" {
-  name   = "kv2-readers"
-  policy = file("policies/kv-v2-readers.hcl")
+resource "vault_policy" "internal_readers_policy" {
+  name   = "internal-readers"
+  policy = file("policies/internal-readers.hcl")
 }
+

@@ -54,7 +54,7 @@ data "aws_eks_node_groups" "this" {
   cluster_name    = var.cluster_name
 }
 
-data "aws_eks_node_group" "example" {
+data "aws_eks_node_group" "this" {
   for_each = data.aws_eks_node_groups.this.names
 
   cluster_name    = var.cluster_name

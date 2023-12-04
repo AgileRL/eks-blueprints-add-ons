@@ -1,1 +1,0 @@
-vault/vault-store-root-key.sh

@@ -32,7 +32,7 @@ spec:
             - /data
         ingressNginx:
           enable: true
-        # vault:
-          # enable: true
+        vault:
+          enable: true
   syncPolicy:
     automated: {}

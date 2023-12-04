@@ -1,0 +1,239 @@
+image:
+  repository: bitnami/keycloak
+  tag: 22.0.5-debian-11-r2
+  debug: false
+
+auth:
+  ## @param auth.adminUser Keycloak administrator user
+  ##
+  adminUser: admin
+  ## @param auth.adminPassword Keycloak administrator password for the new user
+  ##
+  adminPassword: "admin"
+  ## @param auth.existingSecret Existing secret containing Keycloak admin password
+  ##
+  existingSecret: ""
+  ## @param auth.passwordSecretKey Key where the Keycloak admin password is being stored inside the existing secret.
+  ##
+  passwordSecretKey: ""
+
+tls:
+  ## @param tls.enabled Enable TLS encryption. Required for HTTPs traffic.
+  ##
+  enabled: false
+
+production: true
+proxy: edge
+## Keycloak Service Discovery settings
+## ref: https://github.com/bitnami/containers/tree/main/bitnami/keycloak#cluster-configuration
+##
+## @param configuration Keycloak Configuration. Auto-generated based on other parameters when not specified
+## Specify content for keycloak.conf
+## NOTE: This will override configuring Keycloak based on environment variables (including those set by the chart)
+## The keycloak.conf is auto-generated based on other parameters when this parameter is not specified
+##
+## Example:
+## configuration: |-
+##    foo: bar
+##    baz:
+##
+configuration: ""
+extraStartupArgs: "--hostname-admin=auth-admin.agilerl.rlops.ai"
+command: []
+args: []
+## @param extraEnvVars Extra environment variables to be set on Keycloak container
+## Example:
+## extraEnvVars:
+##   - name: FOO
+##     value: "bar"
+##
+extraEnvVars: 
+  # - name: KEYCLOAK_HEALTH_ENABLED
+  #   value: "true"
+  - name: KEYCLOAK_ENABLE_HEALTH_ENDPOINTS
+    value: "true"
+  # - name: KEYCLOAK_HOSTNAME
+  #   value: auth.agilerl.rlops.ai
+  # - name: KEYCLOAK_HOSTNAME_ADMIN
+  #   value: auth-admin.agilerl.rlops.ai
+  # - name: KEYCLOAK_HOSTNAME_STRICT
+  #   value: "false"
+  # - name: KEYCLOAK_HOSTNAME_STRICT_BACKCHANNEL
+  #   value: "false"
+  # - name: KEYCLOAK_TRASACTION_XA_ENABLED
+  #   value: "false"
+
+replicaCount: 3
+## @param containerPorts.http Keycloak HTTP container port
+## @param containerPorts.https Keycloak HTTPS container port
+## @param containerPorts.infinispan Keycloak infinispan container port
+##
+containerPorts:
+  http: 8080
+  https: 8443
+  infinispan: 7800
+
+podSecurityContext:
+  enabled: true
+  fsGroup: 1001
+containerSecurityContext:
+  enabled: true
+  runAsUser: 1001
+  runAsNonRoot: true
+  privileged: false
+  readOnlyRootFilesystem: false
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: ["ALL"]
+  seccompProfile:
+    type: "RuntimeDefault"
+resources:
+  limits: {}
+  requests: {}
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 300
+  periodSeconds: 1
+  timeoutSeconds: 5
+  failureThreshold: 3
+  successThreshold: 1
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 1
+  failureThreshold: 3
+  successThreshold: 1
+startupProbe:
+  enabled: false
+  initialDelaySeconds: 30
+  periodSeconds: 5
+  timeoutSeconds: 1
+  failureThreshold: 60
+  successThreshold: 1
+
+podAntiAffinityPreset: soft
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate: {}
+
+service:
+  type: ClusterIP
+  http:
+    enabled: true
+  ports:
+    http: 80
+    https: 443
+  ## @param service.sessionAffinity Control where client requests go, to the same pod or round-robin
+  ## Values: ClientIP or None
+  ## ref: https://kubernetes.io/docs/user-guide/services/
+  ##
+  sessionAffinity: None
+  ## @param service.sessionAffinityConfig Additional settings for the sessionAffinity
+  ## sessionAffinityConfig:
+  ##   clientIP:
+  ##     timeoutSeconds: 300
+  ##
+  sessionAffinityConfig: {}
+  externalTrafficPolicy: Cluster
+ingress:
+  enabled: true
+  ingressClassName: "nginx"
+  ## @param ingress.pathType Ingress path type
+  ##
+  pathType: ImplementationSpecific
+  hostname: auth.agilerl.rlops.ai 
+  path: "{{ .Values.httpRelativePath }}"
+  servicePort: http
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/app-root: /realms/agilerl-dev/account/
+  tls: true
+  # extraHosts:
+  #   - name: auth-admin.agilerl.rlops.ai
+  #     path: /
+  # extraTls:
+  #   - hosts:
+  #       - auth-admin.agilerl.rlops.ai
+  #     secretName: auth-admin.agilerl.rlops.ai-tls
+
+## Network Policy configuration
+## ref: https://kubernetes.io/docs/concepts/services-networking/network-policies/
+##
+networkPolicy:
+  ## @param networkPolicy.enabled Enable the default NetworkPolicy policy
+  ##
+  enabled: false
+  ## @param networkPolicy.allowExternal Don't require client label for connections
+  ## The Policy model to apply. When set to false, only pods with the correct
+  ## client label will have network access to the ports Keycloak is listening
+  ## on. When true, Keycloak will accept connections from any source
+  ## (with the correct destination port).
+  ##
+  allowExternal: true
+  ## @param networkPolicy.additionalRules Additional NetworkPolicy rules
+  ## Note that all rules are OR-ed.
+  ## Example:
+  ## additionalRules:
+  ##   - matchLabels:
+  ##       - role: frontend
+  ##   - matchExpressions:
+  ##       - key: role
+  ##         operator: In
+  ##         values:
+  ##           - frontend
+  ##
+  additionalRules: {}
+
+## @section RBAC parameter
+## Specifies whether a ServiceAccount should be created
+##
+serviceAccount:
+  ## @param serviceAccount.create Enable the creation of a ServiceAccount for Keycloak pods
+  ##
+  create: true
+  ## @param serviceAccount.name Name of the created ServiceAccount
+  ## If not set and create is true, a name is generated using the fullname template
+  ##
+  name: ""
+  ## @param serviceAccount.automountServiceAccountToken Auto-mount the service account token in the pod
+  ##
+  automountServiceAccountToken: true
+rbac:
+  ## @param rbac.create Whether to create and use RBAC resources or not
+  ##
+  create: false
+  ## @param rbac.rules Custom RBAC rules
+  ## Example:
+  ## rules:
+  ##   - apiGroups:
+  ##       - ""
+  ##     resources:
+  ##       - pods
+  ##     verbs:
+  ##       - get
+  ##       - list
+  ##
+  rules: []
+
+postgresql:
+  enabled: false
+
+externalDatabase:
+  host: "auth-db"
+  port: 5432
+  user: keycloak
+  database: keycloak
+  password: ""
+  existingSecret: "keycloak.auth-db.credentials.postgresql.acid.zalan.do"
+  existingSecretHostKey: ""
+  existingSecretPortKey: ""
+  existingSecretUserKey: "username"
+  existingSecretDatabaseKey: ""
+  existingSecretPasswordKey: "password"
+  annotations: {}
+
+logging:
+  output: default
+  level: INFO

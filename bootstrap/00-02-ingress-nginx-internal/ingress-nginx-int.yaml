@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ingress-nginx-int
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/AgileRL/eks-blueprints-add-ons'
+    path: add-ons/ingress-nginx
+    targetRevision: agrl-core
+    helm:
+      values: |
+        ingress-nginx:
+          createNamespace: true
+          enable: true
+          controller:
+            electionID: ingress-controller-leader
+            ingressClass: internal-nginx
+            ingressClassResource:
+              name: internal-nginx  # default: nginx
+              enabled: true
+              default: true
+              controllerValue: "k8s.io/internal-ingress-nginx"  # default: k8s.io/ingress-nginx
+            service:
+              type: ClusterIP
+              externalTrafficPolicy: Cluster
+              external:
+                enabled: false
+              internal:
+                enabled: true
+                annotations:
+                  # Create internal NLB
+                  service.beta.kubernetes.io/aws-load-balancer-scheme: "internal"
+                  # Any other annotation can be declared here.
+
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: ingress-nginx
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 1
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 1m

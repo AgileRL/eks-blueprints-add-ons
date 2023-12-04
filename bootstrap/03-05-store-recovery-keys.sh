@@ -1,1 +1,0 @@
-vault/vault-store-recovery-keys.sh

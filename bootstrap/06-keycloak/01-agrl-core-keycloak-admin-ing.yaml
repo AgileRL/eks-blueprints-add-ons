@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    meta.helm.sh/release-name: agrl-core
+    meta.helm.sh/release-namespace: auth-system
+  labels:
+    app.kubernetes.io/component: keycloak
+    app.kubernetes.io/instance: agrl-core
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: keycloak
+    app.kubernetes.io/version: 22.0.5
+    helm.sh/chart: keycloak-17.3.4
+  name: agrl-core-keycloak-admin
+  namespace: auth-system
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: auth-admin.agilerl.rlops.ai
+    http:
+      paths:
+      - backend:
+          service:
+            name: agrl-core-keycloak
+            port:
+              name: http
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - auth-admin.agilerl.rlops.ai
+    secretName: auth-admin.agilerl.rlops.ai-tls
