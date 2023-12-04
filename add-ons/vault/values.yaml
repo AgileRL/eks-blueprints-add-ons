@@ -110,3 +110,14 @@ vault:
     serviceNodePort: null
     externalPort: 8200
   
+  # secrets-store-csi-driver-provider-vault
+  csi:
+    # True if you want to install a secrets-store-csi-driver-provider-vault daemonset.
+    #
+    # Requires installing the secrets-store-csi-driver separately, see:
+    # https://github.com/kubernetes-sigs/secrets-store-csi-driver#install-the-secrets-store-csi-driver
+    #
+    # With the driver and provider installed, you can mount Vault secrets into volumes
+    # similar to the Vault Agent injector, and you can also sync those secrets into
+    # Kubernetes secrets.
+    enabled: true
