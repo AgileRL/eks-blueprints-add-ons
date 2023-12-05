@@ -4,6 +4,7 @@
 vault:
   global:
     tlsDisable: false
+    externalVaultAddr: https://vault.agilerl.rlops.ai
 
   injector:
     resources:
