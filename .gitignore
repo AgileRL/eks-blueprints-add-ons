@@ -39,3 +39,7 @@ builds
 
 # Do not store credential data
 vault/data/vault.recovery
+*.pem
+
+**/deprecated/*
+**/scratch/*
