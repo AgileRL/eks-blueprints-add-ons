@@ -24,7 +24,8 @@ cilium:
   authentication:
     mutual:
       spire:
-        enabled: true
+        # FIXME it is stopping some connections
+        enabled: false
         install:
           enabled: true
 
