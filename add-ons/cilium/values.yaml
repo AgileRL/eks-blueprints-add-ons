@@ -29,13 +29,13 @@ cilium:
         install:
           enabled: true
 
-  # k8s ingress support
-  # l7Proxy: true # by default
-  nodePort:
-    enabled: true
-  ingressController:
-    enabled: true
-    loadbalancerMode: dedicated # only create one load balancer resource
+  # # k8s ingress support
+  # # l7Proxy: true # by default
+  # nodePort:
+  #   enabled: true
+  # ingressController:
+  #   enabled: true
+  #   loadbalancerMode: shared # only create one load balancer resource
 
 #  # kube-proxy replacement
 #  # k8sServiceHost and k8sServicePort are needed 
