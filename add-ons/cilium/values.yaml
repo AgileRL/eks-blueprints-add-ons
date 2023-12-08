@@ -35,7 +35,7 @@ cilium:
     enabled: true
   ingressController:
     enabled: true
-    loadbalancerMode: shared # only create one load balancer resource
+    loadbalancerMode: dedicated # only create one load balancer resource
 
 #  # kube-proxy replacement
 #  # k8sServiceHost and k8sServicePort are needed 
